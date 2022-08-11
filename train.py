@@ -52,7 +52,7 @@ train_dataset = train_dataset.shuffle(buffer_size = len(train_dataset),
 ds_train = train_dataset.map(read_image).batch(batch_size)
 ds_test = test_dataset.map(read_image).batch(batch_size)
 
-print('Size of ds_train: ' + str(len(ds_train)))
+print(f'Size of ds_train: {len(ds_train)}')
 
 # %% codecell
 # construct the model

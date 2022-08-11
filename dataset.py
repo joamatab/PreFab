@@ -31,8 +31,8 @@ def pad(image, pad = 100):
 GDS_images = []
 SEM_images = []
 SEMb_images = []
-GDS_dir = 'data/' + run + '/GDS/'
-SEM_dir = 'data/' + run + '/SEM/'
+GDS_dir = f'data/{run}/GDS/'
+SEM_dir = f'data/{run}/SEM/'
 for SEM_path in os.listdir(SEM_dir):
     SEM_image = cv2.imread(SEM_dir + SEM_path, 0)
     if SEM_image is not None:
@@ -56,12 +56,17 @@ xs = ys = 0
 xe = ye = slice_size
 im = 0
 rows = []
-dataset_dir = 'datasets/' + str(run) + '_v' + str(version)
+dataset_dir = f'datasets/{str(run)}_v{str(version)}'
 if not os.path.exists(dataset_dir):
     os.makedirs(dataset_dir)
 for j in range(len(SEM_images)):
-    print('Slicing and saving Image ' + str(j + 1) + '/'
-        + str(len(GDS_images)) +  '...')
+    print(
+        (
+            (f'Slicing and saving Image {str(j + 1)}/' + str(len(GDS_images)))
+            + '...'
+        )
+    )
+
     xs = ys = 0
     xe = ye = slice_size
     while xe < image_size[1]:
@@ -69,14 +74,17 @@ for j in range(len(SEM_images)):
         ye = slice_size
         while ye < image_size[0]:
             if (GDS_images[j][ys:ye, xs:xe].shape == (slice_size, slice_size)):
-                cv2.imwrite(dataset_dir + '/GDS_' + str(im) + '.jpg',
-                    GDS_images[j][ys:ye, xs:xe])
-                cv2.imwrite(dataset_dir + '/SEM_' + str(im) + '.jpg',
-                    SEM_images[j][ys:ye, xs:xe])
-                cv2.imwrite(dataset_dir + '/SEMb_' + str(im) + '.jpg',
-                    SEMb_images[j][ys:ye, xs:xe])
-                rows.append(['GDS_' + str(im) + '.jpg',
-                    'SEM_' + str(im) + '.jpg', 'SEMb_' + str(im) + '.jpg'])
+                cv2.imwrite(f'{dataset_dir}/GDS_{str(im)}.jpg', GDS_images[j][ys:ye, xs:xe])
+                cv2.imwrite(f'{dataset_dir}/SEM_{str(im)}.jpg', SEM_images[j][ys:ye, xs:xe])
+                cv2.imwrite(f'{dataset_dir}/SEMb_{str(im)}.jpg', SEMb_images[j][ys:ye, xs:xe])
+                rows.append(
+                    [
+                        f'GDS_{str(im)}.jpg',
+                        f'SEM_{str(im)}.jpg',
+                        f'SEMb_{str(im)}.jpg',
+                    ]
+                )
+
                 im += 1
             ye += step_size
             ys += step_size
@@ -84,7 +92,7 @@ for j in range(len(SEM_images)):
         xs += step_size
 
 # create .csv of image filenames
-csvpath = 'datasets/' + str(run) + '_v' + str(version) + ".csv"
+csvpath = f'datasets/{str(run)}_v{str(version)}.csv'
 
 with open(csvpath, 'w') as csvfile:
     csvwriter = csv.writer(csvfile)

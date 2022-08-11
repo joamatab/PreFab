@@ -14,10 +14,19 @@ class Predictor():
         self.run = run
         self.version = version
         self.model_nums = model_nums
-        self.models = []
-        for j in self.model_nums:
-            self.models.append(models.load_model("models/predictor_"
-                + self.run + "_v" + str(self.version) + "_m" + str(j) + ".pb"))
+        self.models = [
+            models.load_model(
+                "models/predictor_"
+                + self.run
+                + "_v"
+                + str(self.version)
+                + "_m"
+                + str(j)
+                + ".pb"
+            )
+            for j in self.model_nums
+        ]
+
         self.slice_size = int(np.sqrt(self.models[0].weights[-1].shape)[0])
 
     def predict(self, device, step_size, binarize):
